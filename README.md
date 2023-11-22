@@ -1,70 +1,378 @@
-# Getting Started with Create React App
+[youtube](https://www.youtube.com/watch?v=XQHz9CnHeMs&list=PLFsTDfETmB8YW5qzE6OZRumORvTwkAgvv&index=2)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+[react](https://legacy.reactjs.org/docs/create-a-new-react-app.html)
 
-## Available Scripts
+[@apollo/react-hooks](https://www.npmjs.com/package/@apollo/react-hooks)
 
-In the project directory, you can run:
 
-### `npm start`
+# بسم الله الرحمن الرحيم
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+```shell
+npx create-react-app my-app
+# npm install apollo-boost react-apollo graphql --save
+# npm install apollo-boost graphql --save
+```
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+```shell
+npm install @apollo/react-hooks
+```
 
-### `npm test`
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+```jsx
+// src/Components/BooksComponents
+import { useState } from "react";
+function BooksComponents() {
+    const mySubmit = (e) => {
+        e.preventDefault();
+    }
+    const [formData, setFormData] = useState({
+        title: null,
+        year: null,
+        number_of_page: null,
+        author_id: null
+    });
+    return (
+        <div>
+            <ul>
+                <li>hello</li>
+                <li>hello</li>
+                <li>hello</li>
+            </ul>
 
-### `npm run build`
+            <form onSubmit={(e) => {
+                mySubmit(e);
+            }}>
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        title: e.target.value
+                    })
+                }} required type="text" placeholder='Title' />
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        year: e.target.value
+                    })
+                }} required type="text" placeholder='Year' />
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        number_of_page: e.target.value
+                    })
+                }} required type="text" placeholder='Number Of Page' />
+                <select required value={formData.author_id || ''}
+                    onChange={(e) => {
+                        setFormData({
+                            ...formData,
+                            author_id: e.target.value
+                        })
+                    }}
+                >
+                    <option disabled value=''>SELECT AUTHOR</option>
+                    <option value='1'>aaaa</option>
+                    <option value='2'>bbb</option>
+                </select>
+                <input type="submit" value="Create" />
+            </form>
+        </div>
+    )
+}
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+export default BooksComponents
+```
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+```jsx
+import BooksComponents from './Components/BooksComponents';
+function App() {
+  return (
+    <div>
+        <BooksComponents />
+    </div>
+  );
+}
+export default App;
+```
 
-### `npm run eject`
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+# query 
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+```jsx
+// -------------- import ----------------
+import { ApolloClient, InMemoryCache, ApolloProvider } from '@apollo/client';
+const client = new ApolloClient({
+  uri: 'http://laravel_graphql.test/graphql',
+  cache: new InMemoryCache(),
+});
+// --------------------------------------
 
-## Learn More
+const root = ReactDOM.createRoot(document.getElementById('root'));
+root.render(
+  <React.StrictMode>
+    {/* --------------- here --------------- */}
+    <ApolloProvider client={client}>
+      <App />
+    </ApolloProvider>,
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    {/* ------------------------------------ */}
+  </React.StrictMode>
+);
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+// If you want to start measuring performance in your app, pass a function
+// to log results (for example: reportWebVitals(console.log))
+// or send to an analytics endpoint. Learn more: https://bit.ly/CRA-vitals
+reportWebVitals();
+```
 
-### Code Splitting
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
 
-### Analyzing the Bundle Size
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
 
-### Making a Progressive Web App
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+```jsx
+import { useState } from "react";
 
-### Advanced Configuration
+// =========== here ===============
+import { gql } from 'apollo-boost';
+import { useQuery } from '@apollo/react-hooks';
+const BOOKS_QUERY = gql`
+{
+    myBooksQuary{
+        id
+        title
+        year
+        number_of_page
+    }
+}
+`
+const AUTHOR_QUERY = gql`{
+    myAuthorsQuery {
+        id
+        name
+        age
+    }
+}
+`
+// ==============================
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+function BooksComponents() {
+    const mySubmit = (e) => {
+        e.preventDefault();
+    }
+    const [formData, setFormData] = useState({
+        title: null,
+        year: null,
+        number_of_page: null,
+        author_id: null
+    });
 
-### Deployment
+    // =========== here ===============
+    // const {data:dataBook,error:errorBook} = useQuery(BOOKS_QUERY)
+    // const {data:dataAuthor,error:errorAuthor} = useQuery(AUTHOR_QUERY)
+    const books = useQuery(BOOKS_QUERY);
+    const authors = useQuery(AUTHOR_QUERY);
+    // ==============================
+    return (
+        <div>
+            <ul>
+                {/* =========== here =============== */}
+                {
+                    books.data != undefined && 
+                    books.data.myBooksQuary.map((item, key) => {
+                        return (
+                            <li key={key}>
+                                {item.title}
+                            </li>
+                        )
+                    })
+                }
+                {/* ============================== */}
+            </ul>
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+            <form onSubmit={(e) => {
+                mySubmit(e);
+            }}>
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        title: e.target.value
+                    })
+                }} required type="text" placeholder='Title' />
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        year: parseInt(e.target.value)
+                    })
+                }} required type="text" placeholder='Year' />
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        number_of_page: parseInt(e.target.value)
+                    })
+                }} required type="text" placeholder='Number Of Page' />
+                <select required value={formData.author_id || ''}
+                    onChange={(e) => {
+                        setFormData({
+                            ...formData,
+                            author_id: parseInt(e.target.value)
+                        })
+                    }}
+                >
+                    <option disabled value=''>SELECT AUTHOR</option>
+                    {/* =========== here =============== */}
+                    {
+                        authors.data != undefined && 
+                        authors.data.myAuthorsQuery.map((item, key) => {
+                            return (
+                                <option value={item.id} key={key}>
+                                    {item.name}
+                                </option>
+                            )
+                        })
+                    }
+                    {/* ============================== */}
+                </select>
+                <input type="submit" value="Create" />
+            </form>
+        </div>
+    )
+}
 
-### `npm run build` fails to minify
+export default BooksComponents
+```
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+
+
+## Mutation
+
+
+```jsx
+import { useState } from "react";
+
+
+import { gql } from 'apollo-boost';
+import { useMutation, useQuery } from '@apollo/react-hooks';
+const BOOKS_QUERY = gql`
+{
+    myBooksQuary{
+        id
+        title
+        year
+        number_of_page
+    }
+}
+`
+const AUTHOR_QUERY = gql`{
+    myAuthorsQuery {
+        id
+        name
+        age
+    }
+}
+`
+// =========== here ===============
+const ADD_BOOK = gql`
+  mutation($title: String, $year: Int, $number_of_page: Int, $author_id: Int) {
+    CreateMyBook(title: $title, year: $year, number_of_page: $number_of_page, author_id: $author_id) {
+      id
+      title
+    }
+  }
+`;
+// ==============================
+
+
+function BooksComponents() {
+    // =========== here ===============
+    const [addbook,{data,error}] = useMutation(ADD_BOOK);
+    // ==============================
+
+    const mySubmit = (e) => {
+        e.preventDefault();
+        // =========== here ===============
+        addbook({
+            variables :{
+                ...formData
+            },
+            refetchQueries:[
+                {query: BOOKS_QUERY}
+            ]
+        })
+        // ==============================
+    }
+    const [formData, setFormData] = useState({
+        title: null,
+        year: null,
+        number_of_page: null,
+        author_id: null
+    });
+    const books = useQuery(BOOKS_QUERY);
+    const authors = useQuery(AUTHOR_QUERY);
+    
+
+
+    return (
+        <div>
+            <ul>
+                {
+                    books.data != undefined && 
+                    books.data.myBooksQuary.map((item, key) => {
+                        return (
+                            <li key={key}>
+                                {item.title}
+                            </li>
+                        )
+                    })
+                }
+            </ul>
+
+            <form onSubmit={(e) => {
+                mySubmit(e);
+            }}>
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        title: e.target.value
+                    })
+                }} required type="text" placeholder='Title' />
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        year: parseInt(e.target.value)  // ------------< here
+                    })
+                }} required type="text" placeholder='Year' />
+                <input onChange={(e) => {
+                    setFormData({
+                        ...formData,
+                        number_of_page: parseInt(e.target.value) // ------------< here
+                    })
+                }} required type="text" placeholder='Number Of Page' />
+                <select required value={formData.author_id || ''}
+                    onChange={(e) => {
+                        setFormData({
+                            ...formData,
+                            author_id: parseInt(e.target.value) // ------------< here
+                        })
+                    }}
+                >
+                    <option disabled value=''>SELECT AUTHOR</option>
+                    {
+                        authors.data != undefined && 
+                        authors.data.myAuthorsQuery.map((item, key) => {
+                            return (
+                                <option value={item.id} key={key}>
+                                    {item.name}
+                                </option>
+                            )
+                        })
+                    }
+                </select>
+                <input type="submit" value="Create" />
+            </form>
+        </div>
+    )
+}
+export default BooksComponents
+```
